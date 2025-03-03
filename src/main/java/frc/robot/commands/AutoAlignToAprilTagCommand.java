@@ -87,10 +87,7 @@ public class AutoAlignToAprilTagCommand extends Command {
     private void generateTrajectory(Pose2d currentPose, Pose2d tagPose) {
 
 
-        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-            currentPose,
-            tagPose
-        );
+
 
         PathConstraints constraints = new PathConstraints(
             0.35,  
@@ -99,20 +96,16 @@ public class AutoAlignToAprilTagCommand extends Command {
             Math.toRadians(720)  
         );
 
-        PathPlannerPath path = new PathPlannerPath(
-            waypoints,
-            constraints,
-            null, 
-            new GoalEndState(0.0, tagPose.getRotation()) 
-        );
 
-        path.preventFlipping = false;
 
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
         tagPose,
         constraints,
         0.0  
 );        
+
+    pathfindingCommand.schedule();
+
 
         isTrajectoryGenerated = true;
         System.out.println("Path is generated");
@@ -125,9 +118,8 @@ public class AutoAlignToAprilTagCommand extends Command {
             System.out.println("Waiting for path");
             return;
         }
-        
-
-
+        ChassisSpeeds speeds = drivetrain.getState().Speeds;
+        drivetrain.setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
     }
 
     @Override
