@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.GoalEndState;
@@ -28,6 +29,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -55,10 +57,14 @@ public class AutoAlignToAprilTagCommand extends Command {
         
         double xOffset = ((visionSubsystem.getTx() - targetTx) / targetTx) * 0.5; 
         double yOffset = ((visionSubsystem.getTy() - targetTy) / targetTy) * 0.3;
+        Pose2d limelightPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+        double timestamp = Timer.getFPGATimestamp(); 
+
+
+        drivetrain.addVisionMeasurement(limelightPose, timestamp);
+        Pose2d tagPose = drivetrain.getState().Pose; 
+
         
-
-        Pose2d tagPose = visionSubsystem.getLatestVisionPose();
-
         Translation2d offset = new Translation2d(xOffset, yOffset).rotateBy(tagPose.getRotation());
 
         Pose2d currentPose = new Pose2d(tagPose.getTranslation().plus(offset), tagPose.getRotation()); 
@@ -102,14 +108,11 @@ public class AutoAlignToAprilTagCommand extends Command {
 
         path.preventFlipping = false;
 
-        this.trajectory = new PathPlannerTrajectory(
-            path,
-            drivetrain.getCurrentChassisSpeeds(),
-            currentPose.getRotation(),
-            drivetrain.getRobotConfig()
-        );
-        drivetrain.followTrajectory(this.trajectory); 
-        
+        Command pathfindingCommand = AutoBuilder.pathfindToPose(
+        tagPose,
+        constraints,
+        0.0  
+);        
 
         isTrajectoryGenerated = true;
         System.out.println("Path is generated");
