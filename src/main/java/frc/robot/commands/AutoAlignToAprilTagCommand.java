@@ -26,128 +26,61 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAlignToAprilTagCommand extends Command {
-    private final CommandSwerveDrivetrain drivetrain;
-    private final VisionSubsystem visionSubsystem;
-    private PathPlannerTrajectory trajectory;
-    private boolean isTrajectoryGenerated = false;
-
-    public AutoAlignToAprilTagCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem visionSubsystem) {
-        this.drivetrain = drivetrain;
-        this.visionSubsystem = visionSubsystem;
-        addRequirements(drivetrain, visionSubsystem);
-    }
-
-    @Override
-    public void initialize() {
-        if (!visionSubsystem.hasValidTarget()) {
-            System.out.println("no april tag");
-            cancel();
-            return;
-        }
-        double targetTx = 0;  
-        double targetTy = -0;
-        
-        double xOffset = ((visionSubsystem.getTx() - targetTx) / targetTx) * 0.5; 
-        double yOffset = ((visionSubsystem.getTy() - targetTy) / targetTy) * 0.3;
-        Pose2d limelightPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
-        double timestamp = Timer.getFPGATimestamp(); 
 
 
-        drivetrain.addVisionMeasurement(limelightPose, timestamp);
-        Pose2d tagPose = drivetrain.getState().Pose; 
+public class AutoAlignToAprilTagCommand {
 
-        
-        Translation2d offset = new Translation2d(xOffset, yOffset).rotateBy(tagPose.getRotation());
+    public static Command createAutoAlignToAprilTagCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem visionSubsystem) {
+        return drivetrain.defer((Supplier<Command>) () -> {
+            if (!visionSubsystem.hasValidTarget()) {
+                System.out.println("No valid AprilTag detected.");
+                return Commands.none();
+            }
 
-        Pose2d currentPose = new Pose2d(tagPose.getTranslation().plus(offset), tagPose.getRotation()); 
+            double targetTx = 0;
+            double targetTy = 0;
 
-        System.out.println("Detected aprilTag at: " + tagPose);
-        System.out.println("starting pose: " + currentPose);
-        System.out.println("Target pose: " + tagPose);
+            double xOffset = ((visionSubsystem.getTx() - targetTx) / targetTx) * 0.5; 
+            double yOffset = ((visionSubsystem.getTy() - targetTy) / targetTy) * 0.3;
 
+            Pose2d limelightPose = LimelightHelpers.getBotPose2d_wpiBlue("limelight");
+            double timestamp = Timer.getFPGATimestamp(); 
 
-  
+            drivetrain.addVisionMeasurement(limelightPose, timestamp);
+            Pose2d tagPose = drivetrain.getState().Pose;
 
+            Translation2d offset = new Translation2d(xOffset, yOffset).rotateBy(tagPose.getRotation());
+            Pose2d currentPose = new Pose2d(tagPose.getTranslation().plus(offset), tagPose.getRotation());
 
-        new Thread(() -> {
-            generateTrajectory(currentPose, tagPose);
-        }).start();
-    
-    }
-    
+            System.out.println("Detected AprilTag at: " + tagPose);
+            System.out.println("Starting pose: " + currentPose);
+            System.out.println("Target pose: " + tagPose);
 
-    private void generateTrajectory(Pose2d currentPose, Pose2d tagPose) {
+            PathConstraints constraints = new PathConstraints(
+                0.35,  
+                0.35,  
+                Math.toRadians(540), 
+                Math.toRadians(720)  
+            );
 
+            return AutoBuilder.pathfindToPose(
+                tagPose,
+                constraints,
+                0.0
+            );
 
-
-
-        PathConstraints constraints = new PathConstraints(
-            0.35,  
-            0.35, 
-            Math.toRadians(540), 
-            Math.toRadians(720)  
-        );
-
-
-
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
-        tagPose,
-        constraints,
-        0.0  
-);        
-
-    pathfindingCommand.schedule();
-
-
-        isTrajectoryGenerated = true;
-        System.out.println("Path is generated");
-
-    }
-
-    @Override
-    public void execute() {
-        if (!isTrajectoryGenerated || trajectory == null) { 
-            System.out.println("Waiting for path");
-            return;
-        }
-        ChassisSpeeds speeds = drivetrain.getState().Speeds;
-        drivetrain.setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
-    }
-
-    @Override
-    public boolean isFinished() {
-         double maxTx = visionSubsystem.getTx();
-         double maxTy = visionSubsystem.getTy();
-        
-        // if (Math.abs(visionSubsystem.getTx()) >= maxTx * 0.95 || 
-        //     Math.abs(visionSubsystem.getTy()) >= maxTy * 0.95) {
-        //     return true;
-        // }
-
-        if (Math.abs(visionSubsystem.getTx() - maxTx) < 0.5 && 
-        Math.abs(visionSubsystem.getTy() - maxTy) < 0.5) { 
-        System.out.println("DONE");
-        return true;
-    }
-       
-    
-        return false; 
-    }
-    
-
-    @Override
-    public void end(boolean interrupted) {
-
-
-
-
+        }).andThen(AutoBuilder.pathfindToPose(
+                drivetrain.getState().Pose, 
+                new PathConstraints(0.35, 0.35, Math.toRadians(540), Math.toRadians(720)), 
+                0.0
+        ));
     }
 }
+
+

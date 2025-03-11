@@ -16,4 +16,77 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public final class EndEffector{
+
+    public static final int EndEffector_MOTOR_1_ID = 12;
+
+    public static final double EndEffector_STARTING_POSITION = 80;
+    public static final double EndEffector_REEF_1_POSITION = -0.65;
+    public static final double EndEffector_REEF_2_POSITION = -0.86;
+    public static final double EndEffector_REEF_3_POSITION = 187;
+    public static final double EndEffector_REEF_4_POSITION = 194.5;
+
+    public static final double EndEffector_HUMAN_STATION = 0.560546875;
+
+
+    
+    public static final double MOTION_MAGIC_ARM_SLOWER_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ARM_SLOWER_ACCLERATION = 400;
+    public static final double MOTION_MAGIC_ARM_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ARM_ACCLERATION = 640;
+    public static final double MOTION_MAGIC_ARM_JERK = 0;
+
+    public static final double EndEffector_TOLERANCE = 0.005;
+  }
+
+  public final class ArmConstants{
+
+
+    public static final int CANcoder = 7;
+
+    public static final int ELEVATOR_MOTOR_1_ID = 13;
+    public static final double ARM_STARTING_POSITION = 80;
+    public static final double ARM_REEF_1_POSITION = -0.133;
+    public static final double ARM_REEF_2_POSITION = 0.139;
+
+
+    public static final double ARM_REEF_3_POSITION = 187;
+    public static final double ARM_REEF_4_POSITION = 194.5;
+
+    public static final double ARM_HUMAN_STATION = 0.1462402;
+
+    
+    public static final double MOTION_MAGIC_ARM_SLOWER_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ARM_SLOWER_ACCLERATION = 400;
+    public static final double MOTION_MAGIC_ARM_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ARM_ACCLERATION = 640;
+    public static final double MOTION_MAGIC_ARM_JERK = 0;
+
+    public static final double ARM_TOLERANCE = 0.005;
+  }
+
+  public final class ElevatorConstants{
+    public static final int ELEVATOR_MOTOR_1_ID = 25;
+    public static final int ELEVATOR_MOTOR_2_ID = 10;
+    public static final double HUMAN_PLAYER_STATION_CENTIMETERS = -0.17734375;
+
+    
+    public static final double ELEVATOR_STARTING_POSITION = 5.0;
+    public static final double ELEVATOR_REEF_1_POSITION = 81.23;
+    public static final double ELEVATOR_REEF_2_POSITION = 122.6;
+    public static final double ELEVATOR_REEF_3_POSITION = 187;
+    public static final double ELEVATOR_REEF_4_POSITION = 194.5;
+
+    public static final double ELEVATOR_HUMAN_STATION = 194.5;
+
+    
+    public static final double MOTION_MAGIC_ELEVATOR_SLOWER_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ELEVATOR_SLOWER_ACCLERATION = 400;
+    public static final double MOTION_MAGIC_ELEVATOR_VELOCITY = 320;
+    public static final double MOTION_MAGIC_ELEVATOR_ACCLERATION = 640;
+    public static final double MOTION_MAGIC_ELEVATOR_JERK = 0;
+
+    public static final double ELEVATOR_TOLERANCE = 0.005;
+  }
+
 }
