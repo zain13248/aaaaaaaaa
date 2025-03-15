@@ -47,6 +47,8 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -65,7 +67,7 @@ public class RobotContainer {
     private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
 
-    private final AutoAlignToAprilTagCommand alignCommand = new AutoAlignToAprilTagCommand();
+    private final AutoAlignToAprilTagCommand alignCommand = new AutoAlignToAprilTagCommand(drivetrain, limelightREEF);
 
     public RobotContainer() {
         configureBindings();
@@ -203,16 +205,7 @@ public class RobotContainer {
         return drivetrain.applyRequest(() ->
         drive.withVelocityX(-1) 
             .withVelocityY(0) 
-            
-
-
-
-
-            
-            .withRotationalRate(0)); 
-    
-
-    
+            .withRotationalRate(0));
     }
 
     // public Command getAutonomousCommand() {

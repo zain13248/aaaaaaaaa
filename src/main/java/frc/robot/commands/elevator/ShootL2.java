@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.elevator;
 
 import static frc.robot.Constants.ElevatorConstants.ELEVATOR_REEF_1_POSITION;
 

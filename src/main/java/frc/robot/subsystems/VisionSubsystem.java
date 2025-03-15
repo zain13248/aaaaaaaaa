@@ -35,11 +35,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double getTx() {
-        return tx.getDouble(0.0); 
+        return tx.getDouble(0); 
     }
     
     public double getTy() {
-        return ty.getDouble(0.0);
+        return ty.getDouble(0);
     }
 
 
@@ -82,6 +82,8 @@ public class VisionSubsystem extends SubsystemBase {
 
 
     }
+
+
 
 }
 

@@ -89,4 +89,13 @@ public final class Constants {
     public static final double ELEVATOR_TOLERANCE = 0.005;
   }
 
+  public final class AutoAllign{
+    public static final double kP = .012;
+    public static final double kI = 0.0;
+    public static double kD = 0;
+
+    
+
+  }
+
 }
