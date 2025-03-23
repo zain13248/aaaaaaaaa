@@ -8,34 +8,26 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.ArmConstants;
-
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndEffector;
-import frc.robot.subsystems.ArmSubsystem;
-
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.commands.endEffector.endEffectorHumanStation;
 public class HumanStation extends SequentialCommandGroup {
 
-    public HumanStation(ElevatorSubsystem elevatorSubsystem, ArmSubsystem armSubsystem, EndEffector endEffector) {
+    public HumanStation(ElevatorSubsystem elevatorSubsystem, EndEffector endEffector, FeederSubsystem feeder) {
         addCommands(
             //PUT IN APTIL TAG AUTO ALLIGN HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-            new InstantCommand(() -> elevatorSubsystem.setElevatorPosition(Constants.ElevatorConstants.ELEVATOR_HUMAN_STATION)),
-            new WaitUntilCommand(() -> (elevatorSubsystem.isElevatorAtPosition(Constants.ElevatorConstants.ELEVATOR_HUMAN_STATION))),
+             new endEffectorHumanStation(endEffector),
+             new InstantCommand(() -> endEffector.runIntake(-0.5)),
+             new InstantCommand(() -> feeder.runIntake(0.3)),
 
-            new InstantCommand(() -> armSubsystem.setArmPosition(Constants.ArmConstants.ARM_HUMAN_STATION)),
-            new WaitUntilCommand(() -> (armSubsystem.isArmAtPosition(Constants.ArmConstants.ARM_HUMAN_STATION))),
+             new WaitUntilCommand(() -> endEffector.isChoralValid()),
 
-            new InstantCommand(() -> endEffector.runIntake(1.0)),             
-            new WaitUntilCommand(() -> (endEffector.isChoralValid())),
-            new InstantCommand(() -> endEffector.runIntake(0.2)),             
+             new InstantCommand(() -> endEffector.runMotorAfterChoralValid()),
 
-            new InstantCommand(() -> armSubsystem.setArmPosition(Constants.ArmConstants.ARM_STARTING_POSITION)),
-            new InstantCommand(() -> elevatorSubsystem.setElevatorPosition(Constants.ElevatorConstants.ELEVATOR_STARTING_POSITION)),
-
-
-            new WaitUntilCommand(() -> (armSubsystem.isArmAtPosition(Constants.ArmConstants.ARM_STARTING_POSITION))),
-            new InstantCommand(() -> elevatorSubsystem.setElevatorPosition(Constants.ElevatorConstants.ELEVATOR_STARTING_POSITION))
+           //  new InstantCommand(() -> endEffector.runIntake(0)),
+             new InstantCommand(() -> feeder.runIntake(0))
 
         );
     }
-}
+}//-2582.8, -2604.097

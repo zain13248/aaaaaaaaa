@@ -1,20 +1,19 @@
 package frc.robot.commands.elevator;
 
+import static frc.robot.Constants.ElevatorConstants.Can90_Elevator;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-
-
-
-public class ShootL1 extends Command {
-    private final ElevatorSubsystem elevator;
+public class ElevatorStarting extends Command {
+    private final ElevatorSubsystem elevator; 
     private final double targetPosition;
-    private final double tolerance = 0.5; // Adjust this based on testing
+    private final double tolerance = 0.5;
 
-    public ShootL1(ElevatorSubsystem elevator) {
+    public ElevatorStarting(ElevatorSubsystem elevator) {
         this.elevator = elevator;
-        this.targetPosition = Constants.ElevatorConstants.ELEVATOR_REEF_1_POSITION;
+        this.targetPosition = Constants.ElevatorConstants.ELEVATOR_STARTING_POSITION + Can90_Elevator;
         addRequirements(elevator);
     }
 

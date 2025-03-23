@@ -20,13 +20,26 @@ public final class Constants {
 
     public static final int EndEffector_MOTOR_1_ID = 12;
 
-    public static final double EndEffector_STARTING_POSITION = 80;
-    public static final double EndEffector_REEF_1_POSITION = -0.65;
-    public static final double EndEffector_REEF_2_POSITION = -0.86;
-    public static final double EndEffector_REEF_3_POSITION = 187;
-    public static final double EndEffector_REEF_4_POSITION = 194.5;
+    public static final double Can90_endEffector = 0.0;
 
-    public static final double EndEffector_HUMAN_STATION = 0.560546875;
+    public static final double EndEffector_STARTING_POSITION = 0.02;
+    public static final double EndEffector_STARTING_ELEVATOR = 0.2;
+
+    public static final double EndEffector_REEF_1_POSITION = 0.13134765625;
+    public static final double EndEffector_REEF_2_POSITION = 0.13134765625;
+    
+    public static final double EndEffector_REEF_3_POSITION =  0.14990234375
+    ;
+    public static final double EndEffector_REEF_4_POSITION = 0.13134765625;
+
+
+    public static final double EndEffector_ALGAE_POSITION = 0.102783203125;
+    public static final double EndEffector_ALGAE_2_POSITION = 0.14;
+    public static final double EndEffector_ALGAE_3_POSITION = 3;
+    public static final double EndEffector_ALGAE_4_POSITION = 4;
+
+
+    public static final double EndEffector_HUMAN_STATION = 0.05;
 
 
     
@@ -37,45 +50,29 @@ public final class Constants {
     public static final double MOTION_MAGIC_ARM_JERK = 0;
 
     public static final double EndEffector_TOLERANCE = 0.005;
+
   }
 
-  public final class ArmConstants{
 
-
-    public static final int CANcoder = 7;
-
-    public static final int ELEVATOR_MOTOR_1_ID = 13;
-    public static final double ARM_STARTING_POSITION = 80;
-    public static final double ARM_REEF_1_POSITION = -0.133;
-    public static final double ARM_REEF_2_POSITION = 0.139;
-
-
-    public static final double ARM_REEF_3_POSITION = 187;
-    public static final double ARM_REEF_4_POSITION = 194.5;
-
-    public static final double ARM_HUMAN_STATION = 0.1462402;
-
-    
-    public static final double MOTION_MAGIC_ARM_SLOWER_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ARM_SLOWER_ACCLERATION = 400;
-    public static final double MOTION_MAGIC_ARM_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ARM_ACCLERATION = 640;
-    public static final double MOTION_MAGIC_ARM_JERK = 0;
-
-    public static final double ARM_TOLERANCE = 0.005;
-  }
 
   public final class ElevatorConstants{
-    public static final int ELEVATOR_MOTOR_1_ID = 25;
-    public static final int ELEVATOR_MOTOR_2_ID = 10;
+
+    public static final int LEFT_ELEVATOR_MOTOR_1_ID = 25;
+    public static final int RIGHT_ELEVATOR_MOTOR_2_ID = 31;
     public static final double HUMAN_PLAYER_STATION_CENTIMETERS = -0.17734375;
 
-    
-    public static final double ELEVATOR_STARTING_POSITION = 5.0;
-    public static final double ELEVATOR_REEF_1_POSITION = 81.23;
-    public static final double ELEVATOR_REEF_2_POSITION = 122.6;
-    public static final double ELEVATOR_REEF_3_POSITION = 187;
-    public static final double ELEVATOR_REEF_4_POSITION = 194.5;
+    public static final double Can90_Elevator = 0;
+    public static final double ELEVATOR_STARTING_POSITION = 0.01;
+    public static final double ELEVATOR_REEF_1_POSITION = 2.031982421875;
+    public static final double ELEVATOR_REEF_2_POSITION = 6.23505859375;
+    public static final double ELEVATOR_REEF_3_POSITION = 10.098388671875;
+    public static final double ELEVATOR_REEF_4_POSITION = 0;
+
+
+    public static final double ELEVATOR_ALGAE_1_POSITION = 3.031982421875;
+    public static final double ELEVATOR_ALGAE_2_POSITION = 5.031982421875;
+    public static final double ELEVATOR_ALGAE_3_POSITION = 3;
+    public static final double ELEVATOR_ALGAE_4_POSITION = 4;
 
     public static final double ELEVATOR_HUMAN_STATION = 194.5;
 
@@ -90,9 +87,9 @@ public final class Constants {
   }
 
   public final class AutoAllign{
-    public static final double kP = .012;
+    public static final double kP = 0.11;
     public static final double kI = 0.0;
-    public static double kD = 0;
+    public static double kD = 0.01;
 
     
 

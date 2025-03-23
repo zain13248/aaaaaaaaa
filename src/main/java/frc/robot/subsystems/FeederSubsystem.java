@@ -9,7 +9,7 @@ public class FeederSubsystem extends SubsystemBase {
     private TalonFXConfiguration MotorConfig;
 
     public FeederSubsystem() {
-        FeederMotor = new TalonFX(22);
+        FeederMotor = new TalonFX(28); //22
 
     MotorConfig = new TalonFXConfiguration()
       .withMotorOutput(new MotorOutputConfigs()

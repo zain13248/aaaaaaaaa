@@ -1,0 +1,46 @@
+package frc.robot.commands.algae;
+
+import static frc.robot.Constants.ElevatorConstants.Can90_Elevator;
+
+import static frc.robot.Constants.EndEffector.Can90_endEffector;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.subsystems.EndEffector;
+import frc.robot.subsystems.ElevatorSubsystem;
+
+public class AlgaeFloor2 extends Command {
+    private final ElevatorSubsystem elevator; 
+    private final EndEffector endEffector; 
+
+    private final double targetPositionElevator;
+    private final double targetPositionEndEffector;
+
+    private final double tolerance = 0.5;
+
+    public AlgaeFloor2(ElevatorSubsystem elevator, EndEffector endEffector) {
+        this.elevator = elevator;
+        this.endEffector = endEffector;
+        this.targetPositionElevator = Constants.ElevatorConstants.ELEVATOR_REEF_1_POSITION + Can90_Elevator;
+        this.targetPositionEndEffector = Constants.EndEffector.EndEffector_ALGAE_2_POSITION+ Can90_endEffector;
+
+        addRequirements(elevator);
+    }
+
+    @Override
+    public void initialize() {
+     //   elevator.setElevatorPosition(targetPositionElevator);
+     endEffector.setEndEffectorPosition(targetPositionEndEffector);
+
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Math.abs(elevator.getAbsolutePosition() - targetPositionElevator) < tolerance && Math.abs(endEffector.getAbsolutePosition() - targetPositionEndEffector) < tolerance;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+
+    }
+}

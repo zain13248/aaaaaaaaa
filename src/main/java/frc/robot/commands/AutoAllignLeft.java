@@ -29,7 +29,7 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAlignToAprilTagCommand extends Command {
+public class AutoAllignLeft extends Command {
   /** Creates a new aprilTagSwerve. */
   int targetTag;
   Double tx, ty, ta;
@@ -46,7 +46,7 @@ public class AutoAlignToAprilTagCommand extends Command {
   private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
   private static final double LIMELIGHT_OFFSET = -3; // Adjust based on mounting
 
-  public AutoAlignToAprilTagCommand(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
+  public AutoAllignLeft(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
     this.swerve = swerve;
     this.limelight = limelight;
     this.joystick = joystick; // ✅ Save joystick reference
