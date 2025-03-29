@@ -83,8 +83,8 @@ public class EndEffector extends SubsystemBase {
     .withNeutralMode(NeutralModeValue.Brake)
     .withInverted(InvertedValue.Clockwise_Positive));
 
-    MotorConfigIntake.Slot0.kP = 1; // A position error of 2.5 rotations results in 12 V output
-    MotorConfigIntake.Slot0.kI = 0; // no output for integrated error
+    MotorConfigIntake.Slot0.kP = 1; 
+    MotorConfigIntake.Slot0.kI = 0;
     MotorConfigIntake.Slot0.kD = 0; 
 
     EndEffectorMotorLeft.getConfigurator().apply(MotorConfig1);
@@ -93,18 +93,18 @@ public class EndEffector extends SubsystemBase {
 
 
 
-    MotorConfig1.Slot0.kS = 0; // Add 0.25 V output to overcome static friction
-    MotorConfig1.Slot0.kV = 0; // A velocity target of 1 rps results in 0.12 V output
-    MotorConfig1.Slot0.kA = 0; // An acceleration of 1 rps/s requires 0.01 V output
+    MotorConfig1.Slot0.kS = 0; 
+    MotorConfig1.Slot0.kV = 0; 
+    MotorConfig1.Slot0.kA = 0;
 
-    MotorConfig1.Slot0.kP = 27; // A position error of 2.5 rotations results in 12 V output
-    MotorConfig1.Slot0.kI = 5; // no output for integrated error
-    MotorConfig1.Slot0.kD = 0; // A velocity error of 1 rps results in 0.1 V output
+    MotorConfig1.Slot0.kP = 27; 
+    MotorConfig1.Slot0.kI = 5; 
+    MotorConfig1.Slot0.kD = 0; 
 
     var motionMagicConfigs = MotorConfig1.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 0.47; // Target cruise velocity of 80 rps
-    motionMagicConfigs.MotionMagicAcceleration = 160; // Target acceleration of 160 rps/s (0.5 seconds)
-    motionMagicConfigs.MotionMagicJerk = 800; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicCruiseVelocity = 0.47;
+    motionMagicConfigs.MotionMagicAcceleration = 160; 
+    motionMagicConfigs.MotionMagicJerk = 800;
 
 
 
@@ -113,10 +113,9 @@ public class EndEffector extends SubsystemBase {
       EndEffectorIntake.getConfigurator().apply(MotorConfigIntake);
       EndEffectorMotorLeft.getConfigurator().apply(MotorConfig1);
       EndEffectorMotorRight.getConfigurator().apply(MotorConfig2);
-      EndEffectorMotorRight.setControl(new Follower(13, true));
+      EndEffectorMotorRight.setControl(new Follower(10, true));
 
-      // EndEffectorMotorLeft.setControl(new Follower(10, true));
-
+      // EndEffectorMotorLeft.set//5.450
         sensor = new TimeOfFlight(SENSOR_ID);
         sensor.setRangingMode(TimeOfFlight.RangingMode.Short, 24);
 
@@ -198,7 +197,7 @@ public void runIntake(double speed) {
     }
 
     public double getIntakePosition() {
-      return EndEffectorIntake.getPosition().getValueAsDouble(); // Correct method for TalonFX
+      return EndEffectorIntake.getPosition().getValueAsDouble();
   }
 
   public double getVelovityMotor() {
@@ -207,14 +206,13 @@ public void runIntake(double speed) {
   }
   
 
-// Converts rotations to encoder units (if using integrated encoder)
 
 public void runMotorAfterChoralValid() {
     if (isChoralValid()) {
-        double currentPosition = getIntakePosition(); // Get current position
-        double targetPosition = currentPosition - (29.6); // Convert 10 rotations to encoder ticks
+        double currentPosition = getIntakePosition(); 
+        double targetPosition = currentPosition - (29.6);
 
-        EndEffectorIntake.setControl(m_intakePosition.withPosition((targetPosition))); // Set TalonFX to position mode
+        EndEffectorIntake.setControl(m_intakePosition.withPosition((targetPosition)));
     }
 }
 

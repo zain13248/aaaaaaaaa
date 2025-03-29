@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle"
+            "pathName": "TestAuto1"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shootL4"
+            "pathName": "TestAuto2"
           }
         }
       ]

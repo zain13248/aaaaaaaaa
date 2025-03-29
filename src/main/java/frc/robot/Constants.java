@@ -42,13 +42,6 @@ public final class Constants {
     public static final double EndEffector_HUMAN_STATION = 0.05;
 
 
-    
-    public static final double MOTION_MAGIC_ARM_SLOWER_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ARM_SLOWER_ACCLERATION = 400;
-    public static final double MOTION_MAGIC_ARM_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ARM_ACCLERATION = 640;
-    public static final double MOTION_MAGIC_ARM_JERK = 0;
-
     public static final double EndEffector_TOLERANCE = 0.005;
 
   }
@@ -71,17 +64,12 @@ public final class Constants {
 
     public static final double ELEVATOR_ALGAE_1_POSITION = 3.031982421875;
     public static final double ELEVATOR_ALGAE_2_POSITION = 5.031982421875;
-    public static final double ELEVATOR_ALGAE_3_POSITION = 3;
-    public static final double ELEVATOR_ALGAE_4_POSITION = 4;
+
 
     public static final double ELEVATOR_HUMAN_STATION = 194.5;
 
     
-    public static final double MOTION_MAGIC_ELEVATOR_SLOWER_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ELEVATOR_SLOWER_ACCLERATION = 400;
-    public static final double MOTION_MAGIC_ELEVATOR_VELOCITY = 320;
-    public static final double MOTION_MAGIC_ELEVATOR_ACCLERATION = 640;
-    public static final double MOTION_MAGIC_ELEVATOR_JERK = 0;
+
 
     public static final double ELEVATOR_TOLERANCE = 0.005;
   }

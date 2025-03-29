@@ -68,55 +68,44 @@ import frc.robot.LimelightHelpers;
         return table.getEntry("tv").getDouble(0) == 1;
     }
     
-    /** Checks if Limelight has a valid target */
 
 
-    /** Gets the horizontal offset from the crosshair to the target in degrees */
     public double getTX() {
         return LimelightHelpers.getTX(limelightName);
     }
 
-    /** Gets the vertical offset from the crosshair to the target in degrees */
     public double getTY() {
         return LimelightHelpers.getTY(limelightName);
     }
 
-    /** Gets the AprilTag ID detected */
     public double getFiducialID() {
         return LimelightHelpers.getFiducialID(limelightName);
     }
 
-    /** Gets the robot's estimated pose from Limelight */
     public Pose2d getBotPose2D() {
         return LimelightHelpers.getBotPose2d(limelightName);
     }
 
-    /** Gets the robot's estimated 3D pose */
     public Pose3d getBotPose3D() {
         return LimelightHelpers.getBotPose3d(limelightName);
     }
 
-    /** Gets the target's 3D pose relative to the camera */
     public Pose3d getTargetPoseCameraSpace() {
         return LimelightHelpers.getTargetPose3d_CameraSpace(limelightName);
     }
 
-    /** Gets the target's 3D pose relative to the robot */
     public Pose3d getTargetPoseRobotSpace() {
         return LimelightHelpers.getTargetPose3d_RobotSpace(limelightName);
     }
 
-    /** Gets the X position of the target relative to the robot */
     public double getXOffset() {
         return getTargetPoseRobotSpace().getX();
     }
 
-    /** Gets the Y position of the target relative to the robot */
     public double getYOffset() {
         return getTargetPoseRobotSpace().getY();
     }
 
-    /** Gets the robot's current rotation from Limelight */
     public Rotation2d getRotation() {
         return getBotPose2D().getRotation();
     }

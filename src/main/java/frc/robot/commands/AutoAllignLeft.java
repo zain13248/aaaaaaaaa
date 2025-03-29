@@ -30,12 +30,11 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoAllignLeft extends Command {
-  /** Creates a new aprilTagSwerve. */
   int targetTag;
   Double tx, ty, ta;
   CommandSwerveDrivetrain swerve;
   limelight limelight;
-  private final XboxController joystick; // ✅ Added joystick for manual control
+  private final XboxController joystick; 
 
   PIDController thetaController;
   PIDController forwardController;
@@ -44,12 +43,12 @@ public class AutoAllignLeft extends Command {
   private long startTime;
 
   private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
-  private static final double LIMELIGHT_OFFSET = -3; // Adjust based on mounting
+  private static final double LIMELIGHT_OFFSET = -3;
 
   public AutoAllignLeft(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
     this.swerve = swerve;
     this.limelight = limelight;
-    this.joystick = joystick; // ✅ Save joystick reference
+    this.joystick = joystick; 
 
     addRequirements(swerve);
   }
@@ -97,16 +96,15 @@ public class AutoAllignLeft extends Command {
       rotation = 0;
     }
 
-    // ✅ NEW: Combine joystick input with auto-align
     double manualX = joystick.getLeftY() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     double manualY = joystick.getLeftX() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     double manualRotation = joystick.getRightX() * RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     swerve.setControl(
         drive.withSpeeds(new ChassisSpeeds(
-            manualX,                     // Keep manual forward/backward control
-            manualY + strafeSpeed,       // Add auto strafe correction
-            manualRotation + rotation    // Add auto rotation correction
+            manualX,                     
+            manualY + strafeSpeed,       
+            manualRotation + rotation   
         ))
     );
   }

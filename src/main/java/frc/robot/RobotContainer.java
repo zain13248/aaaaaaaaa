@@ -10,8 +10,12 @@ import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -81,7 +85,7 @@ private final AlgaeL4 algaeL4 = new AlgaeL4(elevatorSubsystem, endEffector);
 
 
    //   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-  //    private final Command MiddleAuto = new PathPlannerAuto("MiddleAuto");
+   // private final Command MiddleAuto = new PathPlannerAuto("Middle Auto");
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -101,11 +105,22 @@ private final AlgaeL4 algaeL4 = new AlgaeL4(elevatorSubsystem, endEffector);
 
 
 
+    private final SendableChooser<Command> autoChooser;
 
 
 
     public RobotContainer() {
-        configureBindings();
+
+        autoChooser = new SendableChooser<>();
+
+        autoChooser.setDefaultOption("Middle Auto", new PathPlannerAuto("Middle Auto"));
+  //      autoChooser.addOption("Left Auto", new PathPlannerAuto("Left Auto"));
+
+
+        SmartDashboard.putData("Auto", autoChooser);
+
+
+
 
 
 
@@ -114,6 +129,9 @@ private final AlgaeL4 algaeL4 = new AlgaeL4(elevatorSubsystem, endEffector);
     NamedCommands.registerCommand("stopFeeder", new RunFeeder(feederSubsystem, -1));
    // NamedCommands.registerCommand("shootL4", new ShootL4(elevatorSubsystem, armSubsystem, endEffector));
 
+
+   
+   configureBindings();
 
     }
 
@@ -146,7 +164,7 @@ new JoystickButton(joystick, 3)
           //visionSubsystem.setDefaultCommand(new RunCommand(() -> visionSubsystem.updateVisionPose(), visionSubsystem));\
 
     // comment out other defualtCommand to run the feeder or remove defualtcommands so u can use both
-       // elevatorSubsystem.setDefaultCommand(new RunCommand(() -> elevatorSubsystem.runPercent(joystick.getLeftY()), elevatorSubsystem));
+ //       elevatorSubsystem.setDefaultCommand(new RunCommand(() -> elevatorSubsystem.runPercent(joystick.getLeftY()), elevatorSubsystem));
         //  feederSubsystem.setDefaultCommand(new RunCommand(() -> feederSubsystem.runIntake(joystick.getLeftTriggerAxis()), feederSubsystem));
       // endEffector.setDefaultCommand(new RunCommand(() -> endEffector.runPercent(joystick.getRightY()), endEffector));
       //  feederSubsystem.setDefaultCommand(new RunCommand(() -> feederSubsystem.runIntake(joystick.getLeftTriggerAxis()), feederSubsystem));
@@ -206,7 +224,7 @@ new JoystickButton(joystick, 3)
         new JoystickButton(joystick, 8).onTrue(new InstantCommand(() -> drivetrain.zeroGyro()
         ));
     
-           new JoystickButton(joystick, 6).onTrue(new AutoAllignLeft(drivetrain, limelightREEF, joystick));
+           new JoystickButton(joystick, 6).onTrue(new AutoAlignToAprilTagCommand(drivetrain, limelightREEF, joystick));
            new JoystickButton(joystick, 5).onTrue(new AutoAlignToAprilTagCommand(drivetrain, limelightREEF2, joystick));
            new JoystickButton(joystick, 7).onTrue(new ShootL1Out(elevatorSubsystem, endEffector));
 
@@ -310,12 +328,8 @@ new JoystickButton(joystick, 3)
     }
 
     public Command getAutonomousCommand() {
-        return drivetrain.applyRequest(() ->
-        drive.withVelocityX(-1) 
-            .withVelocityY(0) 
-            .withRotationalRate(0));
-
+        return autoChooser.getSelected();
     }
-
-
+        
 }
+

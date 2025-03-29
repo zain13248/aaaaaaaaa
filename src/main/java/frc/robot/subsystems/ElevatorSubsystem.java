@@ -57,7 +57,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   //private final PositionVoltage m_voltagePosition = new PositionVoltage(0).withSlot(0); --OLD CODE
 
   private final MotionMagicVoltage m_voltagePosition = new MotionMagicVoltage(0).withSlot(0);
-  /** Creates a new ElevatorSubsystem. */
   public ElevatorSubsystem() {
 
 
@@ -87,19 +86,18 @@ public class ElevatorSubsystem extends SubsystemBase {
       .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder)); 
 
 
-       eleMotorConfig1.Slot0.kS = 0.25; // Add 0.25 V output to overcome static friction
-       eleMotorConfig1.Slot0.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-       eleMotorConfig1.Slot0.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
+       eleMotorConfig1.Slot0.kS = 0.25;
+       eleMotorConfig1.Slot0.kV = 0.12;
+       eleMotorConfig1.Slot0.kA = 0.01; 
 
-       eleMotorConfig1.Slot0.kP = 6; // A position error of 2.5 rotations results in 12 V output
-       eleMotorConfig1.Slot0.kI = 0.1; // no output for integrated error
-       eleMotorConfig1.Slot0.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+       eleMotorConfig1.Slot0.kP = 6; 
+       eleMotorConfig1.Slot0.kI = 0.1; 
+       eleMotorConfig1.Slot0.kD = 0.1; 
        
-       // set Motion Magic settings
        var motionMagicConfigs = eleMotorConfig1.MotionMagic;
-       motionMagicConfigs.MotionMagicCruiseVelocity = 8.4; //4 // Target cruise velocity of 80 rps
-       motionMagicConfigs.MotionMagicAcceleration = 170; // Target acceleration of 160 rps/s (0.5 seconds)
-       motionMagicConfigs.MotionMagicJerk = 800; // Target jerk of 1600 rps/s/s (0.1 seconds)
+       motionMagicConfigs.MotionMagicCruiseVelocity = 8.4; //4
+       motionMagicConfigs.MotionMagicAcceleration = 170; 
+       motionMagicConfigs.MotionMagicJerk = 800; 
 
 
     elevatorMotor1.getConfigurator().apply(eleMotorConfig1);
@@ -165,8 +163,8 @@ public void runPercent(double N_speed) {
         rightOut.Output = N_speed; 
 
     elevatorMotor1.setControl(leftOut);
-    // elevatorMotor2.setControl(rightOut);
-}
+
+  }
 
 
 }

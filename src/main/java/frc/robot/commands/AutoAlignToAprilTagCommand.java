@@ -30,12 +30,11 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class AutoAlignToAprilTagCommand extends Command {
-  /** Creates a new aprilTagSwerve. */
   int targetTag;
   Double tx, ty, ta;
   CommandSwerveDrivetrain swerve;
   limelight limelight;
-  private final XboxController joystick; // ✅ Added joystick for manual control
+  private final XboxController joystick; 
 
   PIDController thetaController;
   PIDController forwardController;
@@ -43,14 +42,15 @@ public class AutoAlignToAprilTagCommand extends Command {
 
   private long startTime;
 
-  private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
-  private static final double LIMELIGHT_OFFSET = -3; // Adjust based on mounting
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric();
+
+  //private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
+  private static final double LIMELIGHT_OFFSET = 0;
 
   public AutoAlignToAprilTagCommand(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
     this.swerve = swerve;
     this.limelight = limelight;
-    this.joystick = joystick; // ✅ Save joystick reference
-
+    this.joystick = joystick; 
     addRequirements(swerve);
   }
 
@@ -59,7 +59,7 @@ public class AutoAlignToAprilTagCommand extends Command {
     startTime = System.currentTimeMillis();
 
     thetaController = new PIDController(0.01, Constants.AutoAllign.kI, Constants.AutoAllign.kD);
-    forwardController = new PIDController(0.12, 0.0, 0.0);
+    forwardController = new PIDController(0.1, 0.0, 0.0);
     strafeController = new PIDController(0.1, 0.0, 0.0);
 
     getLimelightValues();
@@ -70,58 +70,82 @@ public class AutoAlignToAprilTagCommand extends Command {
     getLimelightValues();
     printLimelightVal();
 
+
     SmartDashboard.putBoolean("AutoAlign Running", true);
     double rotation = thetaController.calculate(limelight.getLimelightTX(), 0);
-    double forwardSpeed = forwardController.calculate(ty, -20);
+    double forwardSpeed = forwardController.calculate(ty, 0);
 
     forwardSpeed = Math.max(-0.5, Math.min(0.5, forwardSpeed));
 
-    if (ta >= 1.5) {
-      forwardSpeed = 0;
-    }
+    SmartDashboard.putNumber("forwardSpeed", forwardSpeed);
+
 
     double strafeSpeed = strafeController.calculate(tx, 0);
     strafeSpeed = Math.max(-0.5, Math.min(0.5, strafeSpeed));
 
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 1.0) {
+
+    if (Math.abs(ty - LIMELIGHT_OFFSET) < 0.5) {
+      forwardSpeed *= 0.3;
+    }
+    if (Math.abs(ty - LIMELIGHT_OFFSET) < 0.5) {
+      forwardSpeed = 0;
+    }
+
+
+    if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
       strafeSpeed *= 0.3;
     }
     if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
       strafeSpeed = 0;
     }
 
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 1.0) {
+
+
+    if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
       rotation *= 0.3;
     }
     if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
       rotation = 0;
     }
 
-    // ✅ NEW: Combine joystick input with auto-align
-    double manualX = joystick.getLeftY() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    double manualY = joystick.getLeftX() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    double manualRotation = joystick.getRightX() * RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+    // double manualX = joystick.getLeftY() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    // double manualY = joystick.getLeftX() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    // double manualRotation = joystick.getRightX() * RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     swerve.setControl(
-        drive.withSpeeds(new ChassisSpeeds(
-            manualX,                     // Keep manual forward/backward control
-            manualY + strafeSpeed,       // Add auto strafe correction
-            manualRotation + rotation    // Add auto rotation correction
-        ))
-    );
+
+    drive.withVelocityX(forwardSpeed ) 
+    .withVelocityY(strafeSpeed ) 
+    .withRotationalRate(rotation) );
+    
   }
+
+  // drive.field
+  // drive.withSpeeds(new ChassisSpeeds(
+  //     manualX,                    
+  //     manualY + strafeSpeed,       
+  //     manualRotation + rotation  
 
   @Override
   public void end(boolean interrupted) {
     swerve.setControl(
-        drive.withSpeeds(new ChassisSpeeds(0, 0, 0))
-    );
+        drive.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
   }
 
   @Override
   public boolean isFinished() {
-    return (System.currentTimeMillis() - startTime) >= 1000; // 2 seconds
+    getLimelightValues(); 
+  
+    double forwardError = forwardController.calculate(ty, 0); 
+    double strafeError = strafeController.calculate(tx, 0);   
+    double rotationError = thetaController.calculate(limelight.getLimelightTX(), 0); 
+  
+    return Math.abs(forwardError) < 0.2 &&
+           Math.abs(strafeError) < 0.2 &&
+           Math.abs(rotationError) < 0.2;
   }
+  
+  
 
   public void getLimelightValues() {
     tx = limelight.getLimelightTX();
