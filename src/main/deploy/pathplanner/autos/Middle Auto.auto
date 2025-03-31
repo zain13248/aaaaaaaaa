@@ -9,12 +9,6 @@
           "data": {
             "pathName": "TestAuto1"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TestAuto2"
-          }
         }
       ]
     }

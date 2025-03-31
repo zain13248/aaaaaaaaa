@@ -29,16 +29,18 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAlignToAprilTagCommand extends Command {
+public class AutoAllignRotate extends Command {
   int targetTag;
   Double tx, ty, ta;
   CommandSwerveDrivetrain swerve;
   limelight limelight;
-  private final XboxController joystick; 
 
-  PIDController thetaController;
-  PIDController forwardController;
-  PIDController strafeController;
+  private double targetx;
+  private double targety;
+  // PIDController forwardController;
+  // PIDController strafeController;
+  private PIDController thetaController = new PIDController(0.1, 0, 0.001);
+
 
   private long startTime;
 
@@ -47,20 +49,19 @@ public class AutoAlignToAprilTagCommand extends Command {
   //private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
   private static final double LIMELIGHT_OFFSET = 0;
 
-  public AutoAlignToAprilTagCommand(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
+  public AutoAllignRotate(CommandSwerveDrivetrain swerve, limelight limelight) {
     this.swerve = swerve;
     this.limelight = limelight;
-    this.joystick = joystick; 
+
     addRequirements(swerve);
   }
 
   @Override
   public void initialize() {
     startTime = System.currentTimeMillis();
+    thetaController.reset();
+    thetaController.setTolerance(0.5);
 
-    thetaController = new PIDController(0.01, Constants.AutoAllign.kI, Constants.AutoAllign.kD);
-    forwardController = new PIDController(0.1, 0.0, 0.0);
-    strafeController = new PIDController(0.1, 0.0, 0.0);
 
     getLimelightValues();
   }
@@ -71,34 +72,7 @@ public class AutoAlignToAprilTagCommand extends Command {
     printLimelightVal();
 
 
-    SmartDashboard.putBoolean("AutoAlign Running", true);
     double rotation = thetaController.calculate(limelight.getLimelightTX(), 0);
-    double forwardSpeed = forwardController.calculate(ty, 0);
-
-    forwardSpeed = Math.max(-0.5, Math.min(0.5, forwardSpeed));
-
-    SmartDashboard.putNumber("forwardSpeed", forwardSpeed);
-
-
-    double strafeSpeed = strafeController.calculate(tx, 0);
-    strafeSpeed = Math.max(-0.5, Math.min(0.5, strafeSpeed));
-
-
-    if (Math.abs(ty - LIMELIGHT_OFFSET) < 0.5) {
-      forwardSpeed *= 0.3;
-    }
-    if (Math.abs(ty - LIMELIGHT_OFFSET) < 0.5) {
-      forwardSpeed = 0;
-    }
-
-
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
-      strafeSpeed *= 0.3;
-    }
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
-      strafeSpeed = 0;
-    }
-
 
 
     if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
@@ -108,23 +82,15 @@ public class AutoAlignToAprilTagCommand extends Command {
       rotation = 0;
     }
 
-    // double manualX = joystick.getLeftY() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    // double manualY = joystick.getLeftX() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    // double manualRotation = joystick.getRightX() * RotationsPerSecond.of(0.75).in(RadiansPerSecond);
-
     swerve.setControl(
 
-    drive.withVelocityX(forwardSpeed ) 
-    .withVelocityY(strafeSpeed ) 
+    drive.withVelocityX(0 ) 
+    .withVelocityY(0 ) 
     .withRotationalRate(rotation) );
     
   }
 
-  // drive.field
-  // drive.withSpeeds(new ChassisSpeeds(
-  //     manualX,                    
-  //     manualY + strafeSpeed,       
-  //     manualRotation + rotation  
+ 
 
   @Override
   public void end(boolean interrupted) {
@@ -135,13 +101,10 @@ public class AutoAlignToAprilTagCommand extends Command {
   @Override
   public boolean isFinished() {
     getLimelightValues(); 
-  
-    double forwardError = forwardController.calculate(ty, 0); 
-    double strafeError = strafeController.calculate(tx, 0);   
+ 
     double rotationError = thetaController.calculate(limelight.getLimelightTX(), 0); 
   
-    return Math.abs(forwardError) < 0.2 &&
-           Math.abs(strafeError) < 0.2 &&
+    return 
            Math.abs(rotationError) < 0.2;
   }
   

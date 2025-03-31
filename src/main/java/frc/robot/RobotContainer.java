@@ -223,9 +223,11 @@ new JoystickButton(joystick, 3)
 
         new JoystickButton(joystick, 8).onTrue(new InstantCommand(() -> drivetrain.zeroGyro()
         ));
-    
-           new JoystickButton(joystick, 6).onTrue(new AutoAlignToAprilTagCommand(drivetrain, limelightREEF, joystick));
-           new JoystickButton(joystick, 5).onTrue(new AutoAlignToAprilTagCommand(drivetrain, limelightREEF2, joystick));
+        
+        new JoystickButton(joystick, 6).onTrue(new ActualAutoAllign(drivetrain, limelightREEF));
+
+           new JoystickButton(joystick, 5).whileTrue(new teleopAutoAllign(drivetrain, limelightREEF, joystick));
+     //      new JoystickButton(joystick, 5).onTrue(new AutoAllignRotate(drivetrain, limelightREEF));
            new JoystickButton(joystick, 7).onTrue(new ShootL1Out(elevatorSubsystem, endEffector));
 
            rightTrigger.onTrue(new HumanStation(elevatorSubsystem, endEffector, feederSubsystem));

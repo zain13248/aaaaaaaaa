@@ -345,5 +345,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void zeroGyro() {
         gyro.setYaw(0);
     }
+
+    // In CommandSwerveDrivetrain.java
+public void stopDrive() {
+    // Stop the drivetrain by setting velocity to zero
+    setControl(new SwerveRequest.RobotCentric().withVelocityX(0).withVelocityY(0).withRotationalRate(0));
+}
+
     
 }

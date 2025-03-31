@@ -29,12 +29,13 @@ import edu.wpi.first.units.measure.*;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAllignLeft extends Command {
+public class teleopAutoAllign extends Command {
+  /** Creates a new aprilTagSwerve. */
   int targetTag;
   Double tx, ty, ta;
   CommandSwerveDrivetrain swerve;
   limelight limelight;
-  private final XboxController joystick; 
+  private final XboxController joystick; // ✅ Added joystick for manual control
 
   PIDController thetaController;
   PIDController forwardController;
@@ -43,12 +44,12 @@ public class AutoAllignLeft extends Command {
   private long startTime;
 
   private final SwerveRequest.ApplyRobotSpeeds drive = new SwerveRequest.ApplyRobotSpeeds();
-  private static final double LIMELIGHT_OFFSET = -3;
+  private static final double LIMELIGHT_OFFSET = -3; // Adjust based on mounting
 
-  public AutoAllignLeft(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
+  public teleopAutoAllign(CommandSwerveDrivetrain swerve, limelight limelight, XboxController joystick) {
     this.swerve = swerve;
     this.limelight = limelight;
-    this.joystick = joystick; 
+    this.joystick = joystick; // ✅ Save joystick reference
 
     addRequirements(swerve);
   }
@@ -71,23 +72,23 @@ public class AutoAllignLeft extends Command {
 
     SmartDashboard.putBoolean("AutoAlign Running", true);
     double rotation = thetaController.calculate(limelight.getLimelightTX(), 0);
-    double forwardSpeed = forwardController.calculate(ty, -20);
+   // double forwardSpeed = forwardController.calculate(ty, -20);
 
-    forwardSpeed = Math.max(-0.5, Math.min(0.5, forwardSpeed));
+ //   forwardSpeed = Math.max(-0.5, Math.min(0.5, forwardSpeed));
 
-    if (ta >= 1.5) {
-      forwardSpeed = 0;
-    }
+    // if (ta >= 1.5) {
+    //   forwardSpeed = 0;
+    // }
 
-    double strafeSpeed = strafeController.calculate(tx, 0);
-    strafeSpeed = Math.max(-0.5, Math.min(0.5, strafeSpeed));
+  //  double strafeSpeed = strafeController.calculate(tx, 0);
+  //  strafeSpeed = Math.max(-0.5, Math.min(0.5, strafeSpeed));
 
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 1.0) {
-      strafeSpeed *= 0.3;
-    }
-    if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
-      strafeSpeed = 0;
-    }
+    // if (Math.abs(tx - LIMELIGHT_OFFSET) < 1.0) {
+    //   strafeSpeed *= 0.3;
+    // }
+    // if (Math.abs(tx - LIMELIGHT_OFFSET) < 0.5) {
+    //   strafeSpeed = 0;
+    // }
 
     if (Math.abs(tx - LIMELIGHT_OFFSET) < 1.0) {
       rotation *= 0.3;
@@ -96,29 +97,31 @@ public class AutoAllignLeft extends Command {
       rotation = 0;
     }
 
+    // ✅ NEW: Combine joystick input with auto-align
     double manualX = joystick.getLeftY() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     double manualY = joystick.getLeftX() * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
     double manualRotation = joystick.getRightX() * RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     swerve.setControl(
         drive.withSpeeds(new ChassisSpeeds(
-            manualX,                     
-            manualY + strafeSpeed,       
-            manualRotation + rotation   
+            manualX,                     // Keep manual forward/backward control
+            manualY + rotation,    
+               // Add auto strafe correction
+            manualRotation     // Add auto rotation correction
         ))
     );
   }
 
   @Override
   public void end(boolean interrupted) {
-    swerve.setControl(
-        drive.withSpeeds(new ChassisSpeeds(0, 0, 0))
-    );
+    // swerve.setControl(
+    //     drive.withSpeeds(new ChassisSpeeds(0, 0, 0))
+    // );
   }
 
   @Override
   public boolean isFinished() {
-    return (System.currentTimeMillis() - startTime) >= 1000; // 2 seconds
+    return (System.currentTimeMillis() - startTime) >= 5000; // 2 seconds
   }
 
   public void getLimelightValues() {
